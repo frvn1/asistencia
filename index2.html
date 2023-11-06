@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema de Control de Asistencias</title>
+  <link rel="stylesheet" href="estilo.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+  </script>
+</head>
+<body>
+  <nav class=" navbar navbar-expand-lg navbar-dark fixed-top nav-underline">
+    <h1 class=" text-center text-white p-2"><img src="logo_zuviria.png" alt="" id="logo_zuviria">Sistema de Control de Asistencias</h1>
+    <!-- para hacer responsive -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <span class="navbar-toggler-icon"></span>
+      <i class="fas fa-bars ms-1"></i>
+  </button>
+  <!-- navbar-nav text-uppercase ms-auto py-4 py-lg-0-->
+  <div class="collapse navbar-collapse" id="navbarResponsive">
+    <ul class="nav nav-underline navbar-nav text-uppercase ms-auto py-5 py-lg-2">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Registrar Estudiante</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">CURSOS</a>
+        <ul class="dropdown-menu">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">1ro</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">1ro "A"</a></li>
+            <li><a class="dropdown-item" href="#">1ro "B"</a></li>
+            <li><a class="dropdown-item" href="#">1ro "C"</a></li>
+         </ul>
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">2do</a>
+        <ul class="dropdown-menu">
+          
+        </ul>
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">3ro</a>
+        <ul class="dropdown-menu">
+          
+        </ul>
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">4to</a>
+        <ul class="dropdown-menu">
+          
+        </ul>
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">5to</a>
+        <ul class="dropdown-menu">
+          
+        </ul>
+        </ul>
+      </li>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Cantidad de Alumno" aria-label="Search" id="numeroAlumnos">
+        <button class="btn btn-outline-success" type="submit" id="crearAlumnos">Filtrar</button>
+      </form>
+    </div>
+  </div>
+</div>
+  </nav>
+  <br><br><br><br><br>
+  <header>
+    <!-- <label class="m-3" for="numeroAlumnos">Número de Alumnos:</label>
+    <input type="number" id="numeroAlumnos">
+    <button class="btn bg-success text-white p-2" id="crearAlumnos">Filtrar</button> -->
+  </header>
+  
+    <div class="container mt-5" id="alumnos">
+    </div>
+
+  <script>
+    let listaAlumnos = [];
+
+    function crearAlumnos(numAlumnos) {
+      for (let i = 1; i <= numAlumnos; i++) {
+        listaAlumnos.push(`Alumno ${i}`);
+        const alumnoDiv = $(`
+         <div class="row align-items-center">
+           <div class="col-2"></div>
+           <div id="div${i}" class="col-8 ausente"> <img class="alumno-img" src="estudiantes.png" alt="Imagen de Alumno ${i}" data-alumno="${i}"></div>
+           <div class="col-2"></div>
+           <div class="row">
+             <div class="col-1"></div>
+             <div class="col-10">Alumno ${i}</div>
+           </div>
+           <div class="row">
+             <div data-alumno="${i}" class="col-4 presente" style="background-color: lightblue" title="ASISTENCIA">A</div>
+             <div data-alumno="${i}" class="col-4 sancion" style="background-color: tomato" title="SANCION">S</div>
+             <div data-alumno="${i}" class="col-4 nota" style="background-color: yellow" title="NOTA">N</div>
+           </div>
+         </div>
+          `);
+        $('#alumnos').append(alumnoDiv);
+
+        // Agregar eventos a las imágenes de los alumnos
+        alumnoDiv.find('.alumno-img').click(function () {
+          const alumnoId = $(this).data('alumno');
+          mostrarOpciones(alumnoId);
+        });
+        alumnoDiv.find('.presente').click(function () {
+          const alumnoId = $(this).data('alumno');
+          if($("#div"+alumnoId).hasClass("ausente"))
+          {
+              $("#div"+alumnoId).css("background-color","lightgreen");
+              $("#div"+alumnoId).removeClass("ausente");  
+              $("#div"+alumnoId).addClass("presente");  
+          }
+          else
+          {
+            $("#div"+alumnoId).css("background-color","tomato");
+            $("#div"+alumnoId).removeClass("presente");  
+            $("#div"+alumnoId).addClass("ausente");  
+          }
+
+        });
+        alumnoDiv.find('.sancion').click(function () {
+          const alumnoId = $(this).data('alumno');
+          const motivo = prompt("Ingrese el motivo de la sanción:");
+          if (motivo) {
+            mostrarSancion(alumnoId, motivo);
+          }
+        });
+        alumnoDiv.find('.nota').click(function () {
+          const alumnoId = $(this).data('alumno');
+          alert("NOTA "+alumnoId);
+        });
+      }
+    }
+    function mostrarSancion(alumnoId, motivo) {
+      const tarjetasImg = $(`<img class="tarjetas-img" src="tarjetas.png" alt="Imagen de Tarjetas" data-alumno="${alumnoId}">`);
+      tarjetasImg.data('motivo', motivo); // Almacena el motivo de sanción
+      $(`.alumno-img[data-alumno="${alumnoId}"]`).after(tarjetasImg);
+
+      // Ocultar otras opciones
+      $('.opciones-alumno').remove();
+      
+      // Agregar un evento de clic a la tarjeta para mostrar el motivo de la sanción
+      tarjetasImg.click(function () {
+        const motivoSancion = $(this).data('motivo');
+        if (motivoSancion) {
+          alert(`Motivo de sanción: ${motivoSancion}`);
+        }
+      });
+    }
+
+    function mostrarCalificar(alumnoId) {
+      const inputCalificar = $(`<input type="number" class="calificacion-input" placeholder="Ingrese la nota" data-alumno="${alumnoId}">`);
+      const guardarNotaBtn = $(`<button class="btn btn-success guardar-nota" data-alumno="${alumnoId}">Guardar Nota</button>`);
+      $(`.alumno-img[data-alumno="${alumnoId}"]`).after(inputCalificar, guardarNotaBtn);
+
+      guardarNotaBtn.click(function () {
+        const nota = inputCalificar.val();
+        if (nota >= 1 && nota <= 10) {
+          // Mostrar la nota en un párrafo
+          const notaParrafo = $(`<p>Nota: ${nota}</p>`);
+          $(`.alumno-img[data-alumno="${alumnoId}"]`).after(notaParrafo);
+
+          // Ocultar otras opciones
+          $('.opciones-alumno').remove();
+        } else {
+          console.log("Error, nota inválida");
+        }
+      });
+    }
+
+    function mostrarAsistenciaOpciones(alumnoId) {
+      // Ocultar las opciones de otros alumnos
+      $('.opciones-alumno').remove();
+
+      const asistenciaDiv = $(`<div class="asistencia-options">
+        <button class="btn btn-info m-3 presente" data-alumno="${alumnoId}">Presente</button>
+        <button class="btn btn-danger m-3 ausente" data-alumno="${alumnoId}">Ausente</button>
+      </div>`);
+
+      $(`.alumno-img[data-alumno="${alumnoId}"]`).after(asistenciaDiv);
+
+      asistenciaDiv.find('.ausente').click(function () {
+        mostrarEstadoAsistencia(alumnoId, 'Ausente');
+      });
+
+      asistenciaDiv.find('.presente').click(function () {
+        mostrarEstadoAsistencia(alumnoId, 'Presente');
+      });
+    }
+
+    function mostrarEstadoAsistencia(alumnoId, estado) {
+      const estadoParrafo = $(`<p>${estado}</p>`);
+      estadoParrafo.addClass(estado.toLowerCase()); 
+      $(`.alumno-img[data-alumno="${alumnoId}"]`).after(estadoParrafo);
+
+      // Ocultar otras opciones
+      $('.opciones-alumno').remove();
+    }
+
+    function cancelarOpciones(alumnoId) {
+      // Ocultar las opciones
+      $('.opciones-alumno').remove();
+
+      // Eliminar imágenes de tarjetas, input de calificación y notas si existen
+      $(`.tarjetas-img[data-alumno="${alumnoId}"]`).remove();
+      $(`.calificacion-input[data-alumno="${alumnoId}"]`).remove();
+      $(`p[data-alumno="${alumnoId}"]`).remove(); // Eliminar el párrafo con la nota
+    }
+
+    $('#crearAlumnos').click(function () {
+      const numAlumnos = parseInt($('#numeroAlumnos').val());
+      crearAlumnos(numAlumnos);
+    });
+  </script>
+</body>
+</html>
